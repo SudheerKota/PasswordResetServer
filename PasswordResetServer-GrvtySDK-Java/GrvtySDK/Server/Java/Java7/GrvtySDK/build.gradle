@@ -1,0 +1,46 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile('commons-logging:commons-logging:1.2')
+    testCompile('commons-logging:commons-logging:1.2')
+    testCompile("junit:junit:4.7")
+    testCompile("org.apache.logging.log4j:log4j-core:2.5")
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+jar {
+    baseName = 'GrvtySDK'
+    appendix = 'Java1.7'
+    version = '1.0.0-FINAL'
+    classifier = 'SNAPSHOT'
+
+    manifest {
+        attributes(
+                "Specification-Title": "RFC 6238",
+                "Specification-Version": "1",
+                "Specification-Vendor": "IETF",
+                "Implementation-Title": "TOTP Password Reset System",
+                "Implementation-Version": version,
+                "Implementation-Vendor": "GRVTY",
+        )
+    }
+}
+
+FileTree publicClasses = fileTree(dir: 'src/main/java', exclude: '**/security/**')
+
+task publicApiDoc(type: Javadoc) {
+    source = publicClasses
+    destinationDir = file("build/docs/GrvtySDK_Server_Java")
+    title = "GRVTY Java API"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.11'
+}
